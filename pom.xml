@@ -57,17 +57,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-	<groupId>org.apache.tomcat</groupId>
-	<artifactId>tomcat-servlet-api</artifactId>
-	<version>9.0.63</version>
-</dependency>
-<dependency>
-	<groupId>org.apache.tomcat</groupId>
-	<artifactId>tomcat-el-api</artifactId>
-	<version>9.0.63</version>
-</dependency>
-
 	</dependencies>
 
 	<build>
