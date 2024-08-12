@@ -7,11 +7,15 @@
 <mapper namespace="com.example.demo.repository.MemberRepository">
 	
 	<insert id="signMember">
-		INSERT INTO `member`
-		SET regDate = NOW(),
-		loginId = #{loginId},
-		loginPw = #{loginPw},
-		`name` = #{name}
+	INSERT INTO `member`
+	SET regDate = NOW(),
+	updateDate = NOW(),
+	loginId = #{loginId},
+	loginPw = #{loginPw},
+	`name` = #{name},
+	nickname = #{nickname},
+	cellphoneNum = #{cellphoneNum},
+	email = #{email}
 	</insert>
 
 	<select id="getMemberById" resultType="Member">

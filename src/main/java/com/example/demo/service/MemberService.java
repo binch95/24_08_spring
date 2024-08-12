@@ -18,16 +18,23 @@ public class MemberService {
 	}
 
 
-	public int signMember(String loginId, String loginPw, String name) {
-		memberRepository.signMember(loginId, loginPw, name);
-		int id = memberRepository.getlastInsertId();
-		return id;
+	public int signMember(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
+		Member existsMember = getMemberByLoginId(loginId);
+
+		if(existsMember != null) {
+			return -1;
+		}
+		memberRepository.signMember(loginId, loginPw, name, nickname, cellphoneNum, email);
+		return memberRepository.getlastInsertId();
 	}
 	
 	public Member getMemberById(int id) {
 		return memberRepository.getMemberById(id);
 	}
 
+	private Member getMemberByLoginId(String loginId) {
+		return memberRepository.getMemberByLoginId(loginId);
+	}
 
 
 

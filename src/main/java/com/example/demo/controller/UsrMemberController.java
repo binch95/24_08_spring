@@ -15,9 +15,13 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/signMember")
 	@ResponseBody
-	public Member signMember(String loginId, String loginPw, String name) {
+	public Object signMember(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
+			String email) {
 
-		int id = memberService.signMember(loginId, loginPw, name);
+		int id = memberService.signMember(loginId, loginPw, name, nickname, cellphoneNum, email);
+		if (id == -1) {
+			return "이미 사용중인 아이디";
+		}
 		Member member = memberService.getMemberById(id);
 		
 		return member;
