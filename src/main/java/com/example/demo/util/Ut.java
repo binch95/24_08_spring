@@ -9,7 +9,7 @@ public class Ut {
 		return str==null || str.trim().length() == 0;
 	}
 	
-	public static boolean isEmpty(Object obj) {
+	public static <T> boolean isEmpty(T obj) {
 		if (obj == null) {
 			return true;
 		}
@@ -25,6 +25,11 @@ public class Ut {
 		}
 		
 		return false;
+	}
+
+	public static String f(String format, Object... args) {
+
+		return String.format(format, args);
 	}
 	
 }

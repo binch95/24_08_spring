@@ -24,5 +24,14 @@
 		WHERE id = #{id}
 	</select>
 
+
+	<select id="getMemberByNameAndEmail" resultType="Member">
+			SELECT *
+			FROM `member`
+			WHERE name = #{name}
+			AND email = #{email}
+	</select>
+	
+	
 </mapper>
 
