@@ -1,0 +1,18 @@
+package com.example.demo.repository;
+
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import com.example.demo.vo.Member;
+
+@Mapper
+public interface MemberRepository {
+
+	public void signMember(String loginId, String loginPw, String name);
+
+	@Select("SELECT LAST_INSERT_ID();")
+	public int getlastInsertId();
+	
+	public Member getMemberById(int id);
+}
