@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.service.ArticleService;
 import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
+import com.example.demo.vo.Member;
 import com.example.demo.vo.ResultData;
+
+import jakarta.servlet.http.HttpSession;
 @Controller
 public class UsrArticleController {
 	@Autowired
@@ -32,12 +35,21 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData doModify(int id, String title, String body) {
+	public ResultData doModify(HttpSession httpSession, int id, String title, String body) {
+		Member member = (Member) httpSession.getAttribute("loginedMember");
+		
+		if (member == null) {
+			return ResultData.from("F-1", Ut.f("로그인하고 써!"));
+		}
 
 		Article article = articleService.getArticleById(id);
 
 		if (article == null) {
 			return ResultData.from("F-1", Ut.f("%d번 게시글은 없습니다.", id));
+		}
+		
+		if(article.getMemberId() != member.getId()) {
+			return ResultData.from("F-1", Ut.f("%d번 게시글을 삭제할 권한이 없습니다.", id));
 		}
 
 		articleService.modifyArticle(id, title, body);
@@ -47,17 +59,35 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public ResultData doDelete(int id) {
+	public ResultData doDelete(HttpSession httpSession, int id) {
+		Member member = (Member) httpSession.getAttribute("loginedMember");
+		
+		if (member == null) {
+			return ResultData.from("F-1", Ut.f("로그인하고 써!"));
+		}
+		
 		Article article = articleService.getArticleById(id);
+		
 		if (article == null) {
 			return ResultData.from("F-1", Ut.f("%d번 게시글은 없습니다.", id));
 		}
+		
+		if(article.getMemberId() != member.getId()) {
+			return ResultData.from("F-1", Ut.f("%d번 게시글을 삭제할 권한이 없습니다.", id));
+		}
+		
 		articleService.deleteArticle(id);
 		return ResultData.from("S-1", Ut.f("%d번 게시글을 삭제합니다.", id), article);
 	}
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public ResultData doWrite(String title, String body) {
+	public ResultData doWrite(HttpSession httpSession, String title, String body) {
+		
+		Member member = (Member) httpSession.getAttribute("loginedMember");
+		
+		if (member == null) {
+			return ResultData.from("F-1", Ut.f("로그인하고 써!"));
+		}
 		
 		if(Ut.isEmpty(title)) {
 			return ResultData.from("F-1", Ut.f("title을 입력해주세요"));
@@ -66,7 +96,7 @@ public class UsrArticleController {
 			return ResultData.from("F-2", Ut.f("body를 입력해주세요"));
 		}
 		
-		int id = articleService.writeArticle(title, body);
+		int id = articleService.writeArticle(member.getId(), title, body);
 		
 		Article article = articleService.getArticleById(id);
 		

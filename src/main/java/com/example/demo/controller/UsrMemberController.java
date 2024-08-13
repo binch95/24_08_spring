@@ -10,6 +10,9 @@ import com.example.demo.service.MemberService;
 import com.example.demo.util.Ut;
 import com.example.demo.vo.Member;
 import com.example.demo.vo.ResultData;
+
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class UsrMemberController {
 	@Autowired
@@ -52,5 +55,51 @@ public class UsrMemberController {
 		return ResultData.from("S-1", Ut.f("%s 계정 생성완료", loginId), member);
 		
 	}
+	
+	@RequestMapping("/usr/member/doLogin")
+	@ResponseBody
+	public ResultData doLogin(HttpSession httpSession, String loginId, String loginPw) {
+		
+		if(httpSession.getAttribute("loginedMember") != null) {
+			return ResultData.from("F-1", Ut.f("이미 로그인 중"));
+		}
+		
+		if(Ut.isEmpty(loginId)) {
+			return ResultData.from("F-1", Ut.f("LoginId 입력  X"));
+		}
+		if(Ut.isEmpty(loginPw)) {
+			return ResultData.from("F-2", Ut.f("loginPw 입력  X"));
+		}
+		
+		
+		Member member = memberService.getMemberByLoginId(loginId);
+		if (member == null) {
+			return ResultData.from("F-3", Ut.f("%s는 없는 아이디 입니다.", loginId));
+		}
+		if(member.getLoginPw().equals(loginPw) == false) {
+			return ResultData.from("F-4", Ut.f("비밀번호가 일치하지 않습니다."));
+		}
+		
+		httpSession.setAttribute("loginedMember", member);
+		 
+		return ResultData.from("S-1", Ut.f("%s님 로그인 되였습니다.", loginId), member);
+	}
+	
+	
+	@RequestMapping("/usr/member/doLogout")
+	@ResponseBody
+	public ResultData doLogout(HttpSession httpSession) {
+		Member member = (Member) httpSession.getAttribute("loginedMember");
+		
+		if (member == null) {
+			return ResultData.from("F-1", Ut.f("로그인중이 아닙니다."));
+		}
+		
+		httpSession.removeAttribute("loginedMember");
+		return ResultData.from("S-1", Ut.f("%s 님 로그아웃 되었습니다.", member.getName()));
+	}
+	
+	
+	
 
 }
