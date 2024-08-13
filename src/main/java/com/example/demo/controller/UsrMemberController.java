@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,25 +22,29 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/signMember")
 	@ResponseBody
-	public Object signMember(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
+	public Object signMember(HttpSession httpSession, String loginId, String loginPw, String name, String nickname, String cellphoneNum,
 			String email) {
+		if(httpSession.getAttribute("loginedMember") != null) {
+			return ResultData.from("F-A", Ut.f("이미 로그인 중"));
+		}
+		
 		if(Ut.isEmptyOrNull(loginId)) {
 			return ResultData.from("F-1", Ut.f("loginId를 입력해주세요"));
 		}
 		if(Ut.isEmptyOrNull(loginPw)) {
-			return ResultData.from("F-1", Ut.f("loginPw를 입력해주세요"));
+			return ResultData.from("F-2", Ut.f("loginPw를 입력해주세요"));
 		}
 		if(Ut.isEmptyOrNull(name)) {
-			return ResultData.from("F-1", Ut.f("name을 입력해주세요"));
+			return ResultData.from("F-3", Ut.f("name을 입력해주세요"));
 		}
 		if(Ut.isEmptyOrNull(nickname)) {
-			return ResultData.from("F-1", Ut.f("nickname을 입력해주세요"));
+			return ResultData.from("F-4", Ut.f("nickname을 입력해주세요"));
 		}
 		if(Ut.isEmptyOrNull(cellphoneNum)) {
-			return ResultData.from("F-1", Ut.f("cellphoneNum를 입력해주세요"));
+			return ResultData.from("F-5", Ut.f("cellphoneNum를 입력해주세요"));
 		}
 		if(Ut.isEmptyOrNull(email)) {
-			return ResultData.from("F-1", Ut.f("email를 입력해주세요"));
+			return ResultData.from("F-6", Ut.f("email를 입력해주세요"));
 		}
 		
 		
@@ -57,11 +63,10 @@ public class UsrMemberController {
 	}
 	
 	@RequestMapping("/usr/member/doLogin")
-	@ResponseBody
-	public ResultData doLogin(HttpSession httpSession, String loginId, String loginPw) {
+	public Object doLogin(HttpSession httpSession, String loginId, String loginPw) {
 		
 		if(httpSession.getAttribute("loginedMember") != null) {
-			return ResultData.from("F-1", Ut.f("이미 로그인 중"));
+			return ResultData.from("F-A", Ut.f("이미 로그인 중"));
 		}
 		
 		if(Ut.isEmpty(loginId)) {
@@ -82,7 +87,7 @@ public class UsrMemberController {
 		
 		httpSession.setAttribute("loginedMember", member);
 		 
-		return ResultData.from("S-1", Ut.f("%s님 로그인 되였습니다.", loginId), member);
+		return "usr/article/list";
 	}
 	
 	

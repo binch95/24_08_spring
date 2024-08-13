@@ -31,8 +31,8 @@ public class ResultData<DT> {
 	public boolean isFail() {
 		return isSuccess() == false;
 	}
-	public static <DT> ResultData<DT> newData(ResultData rd, DT newData){
-		return from(rd.getResultCode(),rd.getMsg(),newData);
+	public static <DT> ResultData<DT> newData(ResultData rd, DT newData) {
+		return from(rd.getResultCode(), rd.getMsg(), newData);
 	}
 	
 }
