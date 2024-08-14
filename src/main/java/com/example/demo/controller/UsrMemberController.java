@@ -4,6 +4,7 @@ package com.example.demo.controller;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -58,12 +59,12 @@ public class UsrMemberController {
 		}
 		Member member = memberService.getMemberById(id);
 		
-		return ResultData.from("S-1", Ut.f("%s 계정 생성완료", loginId), member);
+		return "<script>location.replace('../member/login');</script>";
 		
 	}
 	
 	@RequestMapping("/usr/member/doLogin")
-	public Object doLogin(HttpSession httpSession, String loginId, String loginPw) {
+	public Object doLogin(Model model, HttpSession httpSession, String loginId, String loginPw) {
 		
 		if(httpSession.getAttribute("loginedMember") != null) {
 			return ResultData.from("F-A", Ut.f("이미 로그인 중"));
@@ -86,14 +87,14 @@ public class UsrMemberController {
 		}
 		
 		httpSession.setAttribute("loginedMember", member);
+		model.addAttribute("loginedMember", member);
 		 
-		return "usr/article/list";
+		return "/usr/home/main";
 	}
 	
 	
 	@RequestMapping("/usr/member/doLogout")
-	@ResponseBody
-	public ResultData doLogout(HttpSession httpSession) {
+	public Object doLogout(HttpSession httpSession) {
 		Member member = (Member) httpSession.getAttribute("loginedMember");
 		
 		if (member == null) {
@@ -101,7 +102,7 @@ public class UsrMemberController {
 		}
 		
 		httpSession.removeAttribute("loginedMember");
-		return ResultData.from("S-1", Ut.f("%s 님 로그아웃 되었습니다.", member.getName()));
+		return "/usr/home/main";
 	}
 	
 	

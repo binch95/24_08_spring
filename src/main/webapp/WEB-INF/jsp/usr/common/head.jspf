@@ -1,12 +1,95 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+          
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>${pageTitle }</title>
 <style type="text/css">
+  body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #333;
+        }
+        .login-form {
+            width: 300px;
+            margin: 0 auto 40px auto;
+        }
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .login-form input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .board-container {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+                .gitar{
+        	width: 10%;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #afafaf;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #bbb;
+        }
+        
 .top-bar {
             background-color: #333;
             overflow: hidden;
@@ -24,20 +107,25 @@
             background-color: #ddd;
             color: black;
         }
-        .top-bar a.active {
-            background-color: #4CAF50;
-            color: white;
 </style>
 <link rel="stylesheet" href="/resource/common.css" />
 <script src="/resource/common.js" defer="defer"></script>
 </head>
-<body>
+<body class="container">
 	<header>
-		<a href="/">LOGO</a>
     <div class="top-bar">
         <a class="active" href="/">홈</a>
         <a href="../article/list">게시판</a>
-        <a href="../article/login">로그인</a>
+        <c:choose>
+        <c:when  test="${loginedMember.loginId == null}" >
+        <a href="../member/login">로그인</a>
+        <a href="../member/sign">회원가입</a>
+		</c:when >
+		
+		<c:when  test="${loginedMember.loginId != null}" >
+        <a href="../member/doLogout">로그아웃</a>
+		</c:when >
+		</c:choose>
     </div>
 
 	</header>

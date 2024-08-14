@@ -31,6 +31,14 @@
 		id DESC
 	</select>
 	
+		<select id="selectRecentPosts" resultType="Article">
+		SELECT *
+		FROM article
+		ORDER BY
+		id DESC
+		Limit 2
+	</select>
+	
 	<select id="getArticleById" resultType="Article">
 		SELECT * 
 		FROM article 
