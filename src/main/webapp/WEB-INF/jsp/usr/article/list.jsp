@@ -1,50 +1,55 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="pageTitle" value="${board.code } LIST"></c:set>
+<%@ include file="../common/head.jspf"%>
+<hr />
 
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시판</title>
-     <style>
+<section class="mt-24 text-xl px-4">
+	<div class="mx-auto">
+			<div class="searchForm text-right mr-36">
+		<form action="/usr/article/list?boardId=${param.boardId }" method="post">
+		<select name="searchSelect" >
+			<option value="select" selected disabled hidden>Select option</option>
+			<option value="title">title</option>
+			<option value="body">body</option>
+			<option value="nickname">extra__writer</option>
+			<option value="name">name</option>
+			<option value="id">id</option>
+			
+		</select>
+		<input type="search" autocomplete="off" name="searchKeyword" class="input input-bordered input-primary input-sm w-full max-w-xs" value="${param.searchKeyword }">
+		<input type="submit" value="검색">
+		</form>
+		</div>
+		<div>${articlesCount } 개</div>
+		<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
 
-    </style>
-</head>
-<body>
+			<thead>
+				<tr>
+					<th style="text-align: center;">ID</th>
+					<th style="text-align: center;">Registration Date</th>
+					<th style="text-align: center;">Title</th>
+					<th style="text-align: center;">Writer</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="article" items="${articles}">
+					<tr class="hover">
+						<td style="text-align: center;">${article.id}</td>
+						<td style="text-align: center;">${article.regDate.substring(0,10)}</td>
+						<td style="text-align: center;"><a class="hover:underline" href="detail?id=${article.id}">${article.title}</a></td>
+						<td style="text-align: center;">${article.extra__writer}</td>
+					</tr>
+				</c:forEach>
 
+				<c:if test="${empty articles}">
+					<tr>
+						<td colspan="4" style="text-align: center;">게시글이 없습니다</td>
+					</tr>
+				</c:if>
+			</tbody>
+		</table>
+	</div>
+</section>
 
-        
-<%@ include file="../common/head.jspf"%>        
-        
-        <div class="board-container">
-        <div class="header">
-            <h1>게시판</h1>
-            </div>
-           
-            <a href="write" class="btn">글쓰기</a>
-            
-            <table>
-                <thead>
-                    <tr>
-                    <th>id</th>
-                    <th>title</th>
-                    <th>body</th>
-
-                </tr>
-            </thead>
-            <tbody>
-			<c:forEach var="article" items="${articles}">
-			<tr>
-				<td class="gitar">${article.id }</td>
-				<td><a href="getArticle?id=${article.id }">${article.title }</a></td>
-				<td>${article.body }</td>
-			</tr>
-		</c:forEach>
-                <!-- 여기에 더 많은 글을 추가할 수 있습니다 -->
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+<%@ include file="../common/foot.jspf"%>

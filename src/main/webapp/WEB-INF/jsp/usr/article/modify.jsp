@@ -1,21 +1,62 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-    <title>게시글 수정</title>
-</head>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="pageTitle" value="MODIFY"></c:set>
 <%@ include file="../common/head.jspf"%>
-<body>
-    <h2>게시글 수정</h2>
-    <form action="/usr/article/doModify" method="post">
-    	글번호 : <input type="text" name="id" value="${article.id }" readonly /><br />
-    	
-        제목: <input type="text" name="title" value="${article.title }" /><br />
-        내용:<br />
-        <textarea name="body" rows="10" cols="50" >${article.body }</textarea><br />
-        <input class="btn" type="submit" value="수정" />
-    </form>
-</body>
-</html>
+<hr />
+
+<section class="mt-24 text-xl px-4">
+	<div class="mx-auto">
+		<form action="../article/doModify" method="POST">
+			<input type="hidden" name="id" value="${article.id}" />
+			<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+				<tbody>
+					<tr>
+						<th style="text-align: center;">ID</th>
+						<td style="text-align: center;">${article.id}</td>
+					</tr>
+					<tr>
+						<th style="text-align: center;">Registration Date</th>
+						<td style="text-align: center;">${article.regDate.substring(0,10)}</td>
+					</tr>
+					<tr>
+						<th style="text-align: center;">Modified date</th>
+						<td style="text-align: center;">${article.updateDate}</td>
+					</tr>
+					<tr>
+						<th style="text-align: center;">Writer</th>
+						<td style="text-align: center;">${article.extra__writer}</td>
+					</tr>
+					<tr>
+						<th style="text-align: center;">Title</th>
+						<td style="text-align: center;"><input name="title" value="${article.title}" type="text" autocomplete="off"
+							placeholder="새 제목을 입력해" class="input input-bordered input-primary w-full max-w-xs input-sm " /></td>
+					</tr>
+					<tr>
+						<th style="text-align: center;">Body</th>
+						<td style="text-align: center;"><input name="body" value="${article.body}" type="text" autocomplete="off"
+							placeholder="새 내용을 입력해" class="input input-bordered input-primary w-full max-w-xs input-sm " /></td>
+					</tr>
+					<tr>
+						<th></th>
+						<td style="text-align: center;">
+							<button class="btn btn-primary">수정</button>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</form>
+		<div class="btns">
+			<button class="btn" type="button" onclick="history.back()">뒤로가기</button>
+			<c:if test="${article.userCanModify }">
+				<a class="btn" href="../article/modify?id=${article.id }">수정</a>
+			</c:if>
+			<c:if test="${article.userCanDelete }">
+				<a class="btn" href="../article/doDelete?id=${article.id }">삭제</a>
+			</c:if>
+
+		</div>
+	</div>
+</section>
+
+<%@ include file="../common/foot.jspf"%>

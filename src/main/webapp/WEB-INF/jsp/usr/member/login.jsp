@@ -1,29 +1,38 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="pageTitle" value="LOGIN"></c:set>
+<%@ include file="../common/head.jspf"%>
+<hr />
 
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인</title>
-     <style>
+<section class="mt-24 text-xl px-4">
+	<div class="mx-auto">
+		<form action="../member/doLogin" method="POST">
+			<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+				<tbody>
+					<tr>
+						<th>아이디</th>
+						<td style="text-align: center;"><input class="input input-bordered input-primary input-sm w-full max-w-xs"
+							name="loginId" autocomplete="off" type="text" placeholder="아이디를 입력해" /></td>
 
-    </style>
-</head>
-<body>
+					</tr>
+					<tr>
+						<th>비밀번호</th>
+						<td style="text-align: center;"><input class="input input-bordered input-primary input-sm w-full max-w-xs"
+							name="loginPw" autocomplete="off" type="text" placeholder="비밀번호를 입력해" /></td>
 
-<%@ include file="../common/head.jspf"%>        
-        <!-- 로그인 폼 -->
-        <div class="login-form">
-            <h2>로그인</h2>
-            <form action="/usr/member/doLogin" method="post">
-                <input type="text" autocomplete="off" name="loginId" placeholder="아이디" required>
-                <input type="password" autocomplete="off" name="loginPw" placeholder="비밀번호" required>
-                <input type="submit" value="로그인">
-            </form>
-        </div>
+					</tr>
+					<tr>
+						<th></th>
+						<td style="text-align: center;"><button class="btn btn-primary">로그인</button></td>
 
-</body>
-</html>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		<div class="btns">
+			<button class="btn" type="button" onclick="history.back()">뒤로가기</button>
+		</div>
+	</div>
+</section>
+
+<%@ include file="../common/foot.jspf"%>

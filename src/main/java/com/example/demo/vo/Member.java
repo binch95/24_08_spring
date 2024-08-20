@@ -1,6 +1,5 @@
 package com.example.demo.vo;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Member {
+
 	private int id;
 	private String regDate;
 	private String updateDate;
@@ -18,4 +18,7 @@ public class Member {
 	private String nickname;
 	private String cellphoneNum;
 	private String email;
+	private boolean delStatus;
+	private String delDate;
+
 }
