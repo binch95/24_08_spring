@@ -3,10 +3,7 @@
 <c:set var="pageTitle" value="${board.code } LIST"></c:set>
 <%@ include file="../common/head.jspf"%>
 <hr />
-
-<section class="mt-24 text-xl px-4">
-	<div class="mx-auto">
-			<div class="searchForm text-right mr-36">
+			<div class="searchForm text-right mr-9 mt-9">
 		<form action="/usr/article/list?boardId=${param.boardId }" method="post">
 		<select name="searchSelect" >
 			<option value="select" selected disabled hidden>Select option</option>
@@ -21,6 +18,9 @@
 		<input type="submit" value="검색">
 		</form>
 		</div>
+<section class="mt-24 text-xl px-4">
+	<div class="mx-auto">
+
 		<div>${articlesCount } 개</div>
 		<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
 

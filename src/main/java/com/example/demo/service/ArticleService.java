@@ -101,10 +101,20 @@ public class ArticleService {
 		return articleRepository.getArticleCount(boardId);
 	}
 
-	public int listview(int id, int view) {
-		view = view + 1;
-		articleRepository.addview(id, view);
-		return  view;
+
+	public ResultData increaseHitCount(int id) {
+		int affectedRow = articleRepository.increaseHitCount(id);
+
+		if (affectedRow == 0) {
+			return ResultData.from("F-1", "해당 게시글 없음", "id", id);
+		}
+
+		return ResultData.from("S-1", "해당 게시글 조회수 증가", "id", id);
+	}
+
+	public Object getArticleHitCount(int id) {
+		return articleRepository.getArticleHitCount(id);
+		
 	}
 
 }

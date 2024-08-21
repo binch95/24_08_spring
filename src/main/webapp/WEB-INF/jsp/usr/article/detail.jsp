@@ -4,6 +4,29 @@
 <%@ include file="../common/head.jspf"%>
 <hr />
 
+<script>
+	const params = {};
+	params.id = parseInt('${param.id}');
+</script>
+
+<script>
+	function ArticleDetail__doIncreaseHitCount() {
+		$.get('../article/doIncreaseHitCountRd', {
+			id : params.id,
+			ajaxMode : 'Y'
+		}, function(data) {
+			console.log(data);
+			console.log(data.data1);
+			$('.article-detail__hit-count').empty().html(data.data1);
+		}, 'json')
+	}
+
+	$(function() {
+		 		ArticleDetail__doIncreaseHitCount();
+//		setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
+	})
+</script>
+
 <section class="mt-24 text-xl px-4">
 	<div class="mx-auto">
 		<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
@@ -38,7 +61,7 @@
 				</tr>
 				<tr>
 					<th style="text-align: center;">View</th>
-					<td style="text-align: center;">${article.view}</td>
+					<td style="text-align: center;"><span class="article-detail__hit-count">${article.view}</span></td>
 				</tr>
 
 			</tbody>

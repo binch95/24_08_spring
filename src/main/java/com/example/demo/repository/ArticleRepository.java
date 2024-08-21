@@ -119,13 +119,20 @@ public interface ArticleRepository {
 			""")
 	public List<Article> getSearchForPrintArticles(int boardId, int limitFrom, int limitTake, String searchKeyword, String searchSelect);
 
-	
+
+	@Select("""
+			SELECT view
+			FROM article
+			WHERE id = #{id}
+				""")
+	public int increaseHitCount(int id);
+
 	@Update("""
 			UPDATE article
-			SET view = #{view}
+			SET view = view + 1
 			WHERE id = #{id}
 			""")
-	public int addview(int id, int view);
+	public Object getArticleHitCount(int id);
 
 
 }
