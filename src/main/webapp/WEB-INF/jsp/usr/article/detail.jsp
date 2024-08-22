@@ -18,14 +18,60 @@
 			console.log(data);
 			console.log(data.data1);
 			$('.article-detail__hit-count').empty().html(data.data1);
-		}, 'json')
-	}
+		}, 'json');
+
+	};
 
 	$(function() {
-		 		ArticleDetail__doIncreaseHitCount();
-//		setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
-	})
+		ArticleDetail__doIncreaseHitCount();
+		// setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
+	});
+
+	$(function() {
+		$('.like-button').click(function() {
+			if ($(this).hasClass('clickOn')) {
+				$(this).removeClass('clickOn');
+				params.updown = -1;
+			} else if ($('.doNotlike-button').hasClass('clickOn')) {
+				params.updown = 2;
+				$(this).addClass('clickOn');
+			} else {
+				params.updown = 1;
+				$(this).addClass('clickOn');
+			}
+			
+			$('.doNotlike-button').removeClass('clickOn');
+			likeUpDown();
+		});
+		$('.doNotlike-button').click(function() {
+			if ($(this).hasClass('clickOn')) {
+				params.updown = 1;
+				$(this).removeClass('clickOn');
+			} else if ($('.like-button').hasClass('clickOn')) {
+				params.updown = -2;
+				$(this).addClass('clickOn');
+			} else {
+				params.updown = -1;
+				$(this).addClass('clickOn');
+			}
+			
+			$('.like-button').removeClass('clickOn');
+			likeUpDown();
+		});
+	});
+	function likeUpDown() {
+		$.get('../article/doInOutLikeCountRd', {
+			id : params.id,
+			upAnddown : params.updown,
+			ajaxMode : 'Y'
+		}, function(data) {
+			console.log(data);
+			console.log(data.data1);
+			$('.article_like-count').empty().html(data.data1);
+		}, 'json');
+	};
 </script>
+
 
 <section class="mt-24 text-xl px-4">
 	<div class="mx-auto">
@@ -60,8 +106,12 @@
 					<td style="text-align: center;">${article.body}</td>
 				</tr>
 				<tr>
-					<th style="text-align: center;">View</th>
-					<td style="text-align: center;"><span class="article-detail__hit-count">${article.view}</span></td>
+					<th style="text-align: center;">Views</th>
+					<td style="text-align: center;"><span class="article-detail__hit-count">${article.view }</span></td>
+				</tr>
+				<tr>
+					<th style="text-align: center;">Like</th>
+					<td style="text-align: center;"><span class="article_like-count">${article.like }</span></td>
 				</tr>
 
 			</tbody>
@@ -75,8 +125,17 @@
 				<a class="btn" href="../article/doDelete?id=${article.id }">삭제</a>
 			</c:if>
 
+			<div class="btn like-button">좋아요</div>
+			<div class="btn doNotlike-button">싫어요</div>
 		</div>
 	</div>
+</section>
+<section>
+<div class="container">
+
+d
+</div>
+
 </section>
 
 <%@ include file="../common/foot.jspf"%>

@@ -6,8 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>${pageTitle }</title>
-<link rel="stylesheet" href="/resource/common.css" />
-<script src="/resource/common.js" defer="defer"></script>
+
 <!-- 제이쿼리 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -22,6 +21,11 @@
 <!-- daisyUI -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />
 <style>
+
+.clickOn{
+background-color: lightgray;
+}
+
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;

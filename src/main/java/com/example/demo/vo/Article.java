@@ -17,6 +17,7 @@ public class Article {
 	private String title;
 	private String body;
 	private int view;
+	private int like;
 
 	private String extra__writer;
 	private boolean userCanModify;

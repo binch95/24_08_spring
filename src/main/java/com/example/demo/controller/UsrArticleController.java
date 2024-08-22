@@ -56,6 +56,17 @@ public class UsrArticleController {
 
 		return ResultData.newData(increaseHitCountRd, "hitCount", articleService.getArticleHitCount(id));
 	}
+	
+	@RequestMapping("/usr/article/doInOutLikeCountRd")
+	@ResponseBody
+	public ResultData doInOutLikeCount(int id, int upAnddown) {
+
+		ResultData doInOutLikeCountRd = articleService.increaseLikeCount(id, upAnddown);
+		if (doInOutLikeCountRd.isFail()) {
+			return doInOutLikeCountRd;
+		}
+		return ResultData.newData(doInOutLikeCountRd, "likeCount", articleService.doInOutLikeCountRd(id));
+	}
 
 	@RequestMapping("/usr/article/modify")
 	public String showModify(HttpServletRequest req, Model model, int id) {
@@ -171,9 +182,10 @@ public class UsrArticleController {
 		int itemsInAPage = 10;
 
 						
-		
+
 		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page);
-		 if(searchKeyword != null) {
+		
+		 if(searchKeyword != null && searchSelect != "select") {
 		articles = articleService.getSearchForPrintArticles(boardId, itemsInAPage, page, searchKeyword,searchSelect);
 		}
 		if (board == null) {
