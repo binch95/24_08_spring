@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.service.ArticleService;
 import com.example.demo.service.BoardService;
+import com.example.demo.service.ReactionPointService;
 import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
 import com.example.demo.vo.Board;
@@ -31,19 +32,26 @@ public class UsrArticleController {
 
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private ReactionPointService reactionPointService;
 
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(HttpServletRequest req, Model model, int id) {
 
 		Rq rq = (Rq) req.getAttribute("rq");
-		
+
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
+
+		// -1 싫어요 , 0 표현 x, 1 좋아요
+		int userCanReaction = reactionPointService.userCanReaction(rq.getLoginedMemberId(), "article", id);
 		
 		model.addAttribute("article", article);
-
+		model.addAttribute("userCanReaction", userCanReaction);
+		
 		return "usr/article/detail";
 	}
-	
+
 	@RequestMapping("/usr/article/doIncreaseHitCountRd")
 	@ResponseBody
 	public ResultData doIncreaseHitCount(int id) {
@@ -56,16 +64,26 @@ public class UsrArticleController {
 
 		return ResultData.newData(increaseHitCountRd, "hitCount", articleService.getArticleHitCount(id));
 	}
-	
+
 	@RequestMapping("/usr/article/doInOutLikeCountRd")
 	@ResponseBody
-	public ResultData doInOutLikeCount(int id, int upAnddown) {
-
-		ResultData doInOutLikeCountRd = articleService.increaseLikeCount(id, upAnddown);
-		if (doInOutLikeCountRd.isFail()) {
-			return doInOutLikeCountRd;
+	public ResultData doInOutLikeCount(Model model, int id, int upAnddown) {
+		String upDown;
+		if(upAnddown == 1) {
+			 upDown = "goodReactionPoint";
+		}else {
+			 upDown = "badReactionPoint";
 		}
-		return ResultData.newData(doInOutLikeCountRd, "likeCount", articleService.doInOutLikeCountRd(id));
+		ResultData increaseLikeCountRd = reactionPointService.increaseLikeCount(upAnddown, id, rq.getLoginedMemberId(), "article", upDown);		
+		
+		if (increaseLikeCountRd.isFail()) {
+			return increaseLikeCountRd;
+		}
+		
+		reactionPointService.updateArticlelike();
+	
+
+		return ResultData.newData(increaseLikeCountRd, "likeCount", reactionPointService.getArticleSumReactionPoint(upAnddown, id));
 	}
 
 	@RequestMapping("/usr/article/modify")
@@ -174,19 +192,18 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/list")
 	public String showList(HttpServletRequest req, Model model, @RequestParam(defaultValue = "1") int boardId,
 			@RequestParam(defaultValue = "1") int page, String searchKeyword, String searchSelect) throws IOException {
-		
+
 		Rq rq = (Rq) req.getAttribute("rq");
 
 		Board board = boardService.getBoardById(boardId);
 
 		int itemsInAPage = 10;
 
-						
-
 		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page);
-		
-		 if(searchKeyword != null && searchSelect != "select") {
-		articles = articleService.getSearchForPrintArticles(boardId, itemsInAPage, page, searchKeyword,searchSelect);
+
+		if (searchKeyword != null && searchSelect != "select") {
+			articles = articleService.getSearchForPrintArticles(boardId, itemsInAPage, page, searchKeyword,
+					searchSelect);
 		}
 		if (board == null) {
 			return rq.historyBackOnView("없는 게시판임");

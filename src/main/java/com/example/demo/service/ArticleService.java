@@ -116,19 +116,6 @@ public class ArticleService {
 		return articleRepository.getArticleHitCount(id);
 	}
 
-	
-	public Object doInOutLikeCountRd(int id) {
-		return articleRepository.getArticleLikeCount(id);
-	}
 
-	public ResultData increaseLikeCount(int id, int upAnddown) {
-		int affectedRow = articleRepository.increaseLikeCount(id, upAnddown);
-
-		if (affectedRow == -1) {
-			return ResultData.from("F-1", "해당 게시글 없음", "id", id);
-		}
-
-		return ResultData.from("S-1", "해당 게시글 좋아요 증가", "id", id);
-	}
 
 }

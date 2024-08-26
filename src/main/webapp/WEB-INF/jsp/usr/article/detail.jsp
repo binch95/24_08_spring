@@ -26,50 +26,62 @@
 		ArticleDetail__doIncreaseHitCount();
 		// setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
 	});
-
+	
 	$(function() {
+		userCanReaction = ${userCanReaction};
 		$('.like-button').click(function() {
+			if(userCanReaction == -2){
+				alert("이용할수 없습니다 로그인 해주세요");
+				return false;
+			}
 			if ($(this).hasClass('clickOn')) {
 				$(this).removeClass('clickOn');
-				params.updown = -1;
-			} else if ($('.doNotlike-button').hasClass('clickOn')) {
-				params.updown = 2;
-				$(this).addClass('clickOn');
 			} else {
-				params.updown = 1;
 				$(this).addClass('clickOn');
 			}
-			
+			params.updown = 1;
 			$('.doNotlike-button').removeClass('clickOn');
-			likeUpDown();
+						
+			$.get('../article/doInOutLikeCountRd', {
+				id : params.id,
+				upAnddown : 1,
+				ajaxMode : 'Y'
+			}, function(data) {
+				console.log(data);
+				console.log(data.data1);
+				$('.goodReactionPoint').empty().html(data.data1);
+			}, 'json');
 		});
+		
 		$('.doNotlike-button').click(function() {
-			if ($(this).hasClass('clickOn')) {
-				params.updown = 1;
-				$(this).removeClass('clickOn');
-			} else if ($('.like-button').hasClass('clickOn')) {
-				params.updown = -2;
-				$(this).addClass('clickOn');
-			} else {
-				params.updown = -1;
-				$(this).addClass('clickOn');
+			if(userCanReaction == -2){
+				alert("이용할수 없습니다 로그인 해주세요");
+				return false;
 			}
 			
+			if ($(this).hasClass('clickOn')) {
+				$(this).removeClass('clickOn');
+			} else {
+				
+				$(this).addClass('clickOn');
+			}
+			params.updown = -1;
 			$('.like-button').removeClass('clickOn');
-			likeUpDown();
+			
+
+			$.get('../article/doInOutLikeCountRd', {
+				id : params.id,
+				upAnddown : -1,
+				ajaxMode : 'Y'
+			}, function(data) {
+				console.log(data);
+				console.log(data.data1);
+				$('.badReactionPoint').empty().html(data.data1 * -1);
+			}, 'json');
 		});
 	});
-	function likeUpDown() {
-		$.get('../article/doInOutLikeCountRd', {
-			id : params.id,
-			upAnddown : params.updown,
-			ajaxMode : 'Y'
-		}, function(data) {
-			console.log(data);
-			console.log(data.data1);
-			$('.article_like-count').empty().html(data.data1);
-		}, 'json');
-	};
+	
+	
 </script>
 
 
@@ -105,13 +117,26 @@
 					<th style="text-align: center;">Body</th>
 					<td style="text-align: center;">${article.body}</td>
 				</tr>
+				
+				<tr>
+					<th style="text-align: center;">Like</th>
+					<td style="text-align: center;" class="goodReactionPoint">${article.goodReactionPoint }</td>
+				</tr>
+				<tr>
+					<th style="text-align: center;">Dislike</th>
+					<td style="text-align: center;"class="badReactionPoint">${article.badReactionPoint }</td>
+				</tr>
+				<tr>
+					<th style="text-align: center;">LIKE / Dislike</th>
+					<td style="text-align: center;">
+						<button class="btn btn-outline btn-success like-button"> LIKE 👍 ${article.goodReactionPoint }</button>
+						<button class="btn btn-outline btn-error doNotlike-button"> DISLIKE 👎 ${article.badReactionPoint }</button>
+					</td>
+				</tr>
+				
 				<tr>
 					<th style="text-align: center;">Views</th>
 					<td style="text-align: center;"><span class="article-detail__hit-count">${article.view }</span></td>
-				</tr>
-				<tr>
-					<th style="text-align: center;">Like</th>
-					<td style="text-align: center;"><span class="article_like-count">${article.like }</span></td>
 				</tr>
 
 			</tbody>
@@ -124,17 +149,11 @@
 			<c:if test="${article.userCanDelete }">
 				<a class="btn" href="../article/doDelete?id=${article.id }">삭제</a>
 			</c:if>
-
-			<div class="btn like-button">좋아요</div>
-			<div class="btn doNotlike-button">싫어요</div>
 		</div>
 	</div>
 </section>
 <section>
-<div class="container">
-
-d
-</div>
+	<div class="container">d</div>
 
 </section>
 

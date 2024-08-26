@@ -41,12 +41,15 @@ public interface ArticleRepository {
 	public void modifyArticle(int id, String title, String body);
 
 	@Select("""
-			SELECT A.* , M.nickname AS extra__writer
+			SELECT A.* , M.nickname AS extra__writer,
+			IFNULL(SUM(RP.point),0) AS extra__sumReactionPoint
 			FROM article AS A
 			INNER JOIN `member` AS M
 			ON A.memberId = M.id
+			LEFT JOIN reactionPoint AS RP
+			ON A.id = RP.relId AND RP.relTypeCode = 'article'
 			WHERE A.id = #{id}
-				""")
+			""")
 	public Article getForPrintArticle(int id);
 
 	@Select("""
@@ -58,14 +61,18 @@ public interface ArticleRepository {
 
 	@Select("""
 			<script>
-				SELECT A.* , M.nickname AS extra__writer
+				SELECT A.* , M.nickname AS extra__writer,
+				IFNULL(SUM(RP.point),0) AS extra__sumReactionPoint
 				FROM article AS A
 				INNER JOIN `member` AS M
 				ON A.memberId = M.id
+				LEFT JOIN reactionPoint AS RP
+				ON A.id = RP.relId AND RP.relTypeCode = 'article'
 				WHERE 1
 				<if test="boardId != 0">
 					AND boardId = #{boardId}
 				</if>
+				GROUP BY A.id
 				ORDER BY A.id DESC
 				<if test="limitFrom >= 0">
 					LIMIT #{limitFrom}, #{limitTake}
@@ -103,15 +110,19 @@ public interface ArticleRepository {
 
 	@Select("""
 			<script>
-				SELECT A.* , M.nickname AS extra__writer
+				SELECT A.* , M.nickname AS extra__writer,
+				IFNULL(SUM(RP.point),0) AS extra__sumReactionPoint
 				FROM article AS A
 				INNER JOIN `member` AS M
 				ON A.memberId = M.id
+				LEFT JOIN reactionPoint AS RP
+				ON A.id = RP.relId AND RP.relTypeCode = 'article'
 				WHERE 1
 				AND ${searchSelect} like CONCAT('%',#{searchKeyword},'%')
 				<if test="boardId != 0">
 					AND boardId = #{boardId}
 				</if>
+				GROUP BY A.id
 				ORDER BY A.id DESC
 				<if test="limitFrom >= 0">
 					LIMIT #{limitFrom}, #{limitTake}
@@ -123,34 +134,17 @@ public interface ArticleRepository {
 
 	@Update("""
 			UPDATE article
-			SET view = view + 1
+			SET hitCount = hitCount + 1
 			WHERE id = #{id}
 			""")
 	public int increaseHitCount(int id);
 
 
 	@Select("""
-			SELECT view
+			SELECT hitCount
 			FROM article
 			WHERE id = #{id}
 				""")
 	public Object getArticleHitCount(int id);
-
 	
-	@Select("""
-			SELECT `like`
-			FROM article
-			WHERE id = #{id}
-				""")
-	public Object getArticleLikeCount(int id);
-	
-
-	@Update("""
-			UPDATE article
-			SET `like` = `like` + #{upAnddown}
-			WHERE id = #{id}
-			""")
-	public int increaseLikeCount(int id, int upAnddown);
-
-
 }
