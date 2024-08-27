@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -12,10 +13,13 @@ import com.example.demo.vo.ResultData;
 import com.example.demo.vo.Rq;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UsrMemberController {
-
+	
+	private HttpSession session;
+	
 	@Autowired
 	private Rq rq;
 
@@ -33,16 +37,17 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/login")
 	public String showLogin(HttpServletRequest req) {
-
+		String referer = req.getHeader("Referer");
+		req.getSession().setAttribute("referer", referer);		
 		return "/usr/member/login";
 	}
 
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
-	public String doLogin(HttpServletRequest req, String loginId, String loginPw) {
+	public String doLogin(Model model, HttpServletRequest req, String loginId, String loginPw) {
 
-		Rq rq = (Rq) req.getAttribute("rq");
-
+				Rq rq = (Rq) req.getAttribute("rq");
+		
 		if (Ut.isEmptyOrNull(loginId)) {
 			return Ut.jsHistoryBack("F-1", "loginId 입력 x");
 		}
@@ -61,13 +66,17 @@ public class UsrMemberController {
 		}
 
 		rq.login(member);
-
+		String referer = (String) req.getSession().getAttribute("referer");
+		if(referer != null) {
+			return Ut.jsReplace("S-1", Ut.f("%s님 환영합니다", member.getNickname()), referer);
+		}
 		return Ut.jsReplace("S-1", Ut.f("%s님 환영합니다", member.getNickname()), "/");
+		
 	}
+	
 
 	@RequestMapping("/usr/member/join")
 	public String showJoin(HttpServletRequest req) {
-
 		return "/usr/member/join";
 	}
 
@@ -75,7 +84,7 @@ public class UsrMemberController {
 	@ResponseBody
 	public String doJoin(HttpServletRequest req, String loginId, String loginPw, String name, String nickname,
 			String cellphoneNum, String email) {
-
+		
 		if (Ut.isEmptyOrNull(loginId)) {
 			return Ut.jsHistoryBack("F-1", "loginId 입력 x");
 		}
@@ -102,7 +111,8 @@ public class UsrMemberController {
 		}
 
 		Member member = memberService.getMemberById((int) joinRd.getData1());
-
+		String referer = req.getHeader("Referer");
+		
 		return Ut.jsReplace(joinRd.getResultCode(), joinRd.getMsg(), "../member/login");
 	}
 

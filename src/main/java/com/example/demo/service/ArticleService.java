@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.vo.Comment;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
@@ -114,6 +115,19 @@ public class ArticleService {
 
 	public Object getArticleHitCount(int id) {
 		return articleRepository.getArticleHitCount(id);
+	}
+
+	public List<Comment> getForPrintComment(int id) {
+
+		return articleRepository.getForPrintComment(id); 
+	}
+
+	public List<Comment> getViewNumberForComment() {
+		return articleRepository.getViewNumberForComment();
+	}
+
+	public void addComment(int id, int loginedMemberId, String commentInput) {
+		articleRepository.addComment(id, loginedMemberId,commentInput);	
 	}
 
 

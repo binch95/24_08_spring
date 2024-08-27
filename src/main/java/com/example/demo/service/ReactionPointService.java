@@ -23,8 +23,6 @@ public class ReactionPointService {
 	}
 
 	public int userCanReaction(int loginedMemberId, String relTypeCode, int relId) {
-		
-		// 로그인 안했어
 		if (loginedMemberId == 0) {
 			return -2;
 		}
@@ -45,7 +43,7 @@ public class ReactionPointService {
 		}
 		
 		reactionPointRepository.cancelReactionPoint(upAnddown, id, loginedMemberId);
-		return ResultData.from("F-1", "해당 게시글 리액션 취소", "id", reactionPointRepository.getArticleSumReactionPoint(upAnddown, id));
+		return ResultData.from("F-1", "해당 게시글 리액션 취소", "likeCancle", reactionPointRepository.getArticleSumReactionPoint(upAnddown, id));
 	}
 
 	public Object getSumReactionPoint(int loginedMemberId, String relTypeCode, int relId) {

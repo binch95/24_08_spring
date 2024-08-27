@@ -16,6 +16,7 @@ import com.example.demo.service.ReactionPointService;
 import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
 import com.example.demo.vo.Board;
+import com.example.demo.vo.Comment;
 import com.example.demo.vo.ResultData;
 import com.example.demo.vo.Rq;
 
@@ -46,7 +47,11 @@ public class UsrArticleController {
 		// -1 싫어요 , 0 표현 x, 1 좋아요
 		int userCanReaction = reactionPointService.userCanReaction(rq.getLoginedMemberId(), "article", id);
 		
+		//댓글 불러오기
+		List<Comment> comments = articleService.getForPrintComment(id);
+		
 		model.addAttribute("article", article);
+		model.addAttribute("comments", comments);
 		model.addAttribute("userCanReaction", userCanReaction);
 		
 		return "usr/article/detail";
@@ -160,6 +165,7 @@ public class UsrArticleController {
 
 		return "usr/article/write";
 	}
+	
 
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
@@ -209,7 +215,9 @@ public class UsrArticleController {
 			return rq.historyBackOnView("없는 게시판임");
 		}
 		int articlesCount = articles.size();
-
+		List<Comment> comments = articleService.getViewNumberForComment();
+		
+		model.addAttribute("comments", comments);
 		model.addAttribute("articles", articles);
 		model.addAttribute("articlesCount", articlesCount);
 		model.addAttribute("board", board);

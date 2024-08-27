@@ -38,7 +38,7 @@
 					<tr class="hover">
 						<td style="text-align: center;">${article.id}</td>
 						<td style="text-align: center;">${article.regDate.substring(0,10)}</td>
-						<td style="text-align: center;"><a class="hover:underline" href="detail?id=${article.id}">${article.title}</a></td>
+						<td style="text-align: center;"><a class="hover:underline" href="detail?id=${article.id}">${article.title}  (${comments[article.id-1].viewNumber })</a></td>
 						<td style="text-align: center;">${article.extra__writer}</td>
 						<td style="text-align: center;"> <span class="like-count">${article.goodReactionPoint + article.badReactionPoint * -1}</span></td>
 					</tr>
