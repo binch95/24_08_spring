@@ -51,5 +51,16 @@ public interface CommentRepository {
 			WHERE id = #{id}
 			""")
 	public void removeComment(int id);
+
+
+	@Update("""
+			UPDATE article_comment
+			SET updateDate = NOW(),
+			`body` = #{commentBody}
+			WHERE articleId = #{id}
+			AND id = #{commentId}
+			AND memberId = #{memberId}
+			""")
+	public void updateComment(int id, int commentId, String commentBody, int memberId);
 	
 }

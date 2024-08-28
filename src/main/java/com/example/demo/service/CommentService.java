@@ -42,5 +42,10 @@ public class CommentService {
 	}
 
 
+	public void updateComment(int id, int commentId, String commentBody, int memberId) {
+		commentRepository.updateComment(id,commentId,commentBody, memberId);		
+	}
+
+
 
 }

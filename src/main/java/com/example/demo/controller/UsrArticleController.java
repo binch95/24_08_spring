@@ -90,6 +90,7 @@ public class UsrArticleController {
 
 		return ResultData.newData(increaseLikeCountRd, "likeCount", reactionPointService.getArticleSumReactionPoint(upAnddown, id));
 	}
+	
 
 	@RequestMapping("/usr/article/modify")
 	public String showModify(HttpServletRequest req, Model model, int id) {

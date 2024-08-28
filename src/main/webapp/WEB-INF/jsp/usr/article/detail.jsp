@@ -39,17 +39,40 @@
 .table.comment th {
   background-color: #f2f2f2;
 }
+.pointer{
+cursor: pointer; 
+}
 </style>
 
 <script>
 	const params = {};
 	params.id = parseInt('${param.id}');
+	editCommentId = -1;
 </script>
 
 <script>
-	function Comment__article_Edit(){
-		
+
+	function Comment__article_Edit(commentId) {
+		$('.comment__list' + commentId).addClass('hidden');
+		$('.edit__ing' + commentId).removeClass('hidden');
 	}
+	
+	function Comment__article_DoEdit(commentId) {
+	    var commentBody = document.getElementsByName('commentEdit' + commentId)[0].value
+
+	    $('.comment__list' + commentId).removeClass('hidden');
+		$('.edit__ing' + commentId).addClass('hidden');
+		$.get('../comment/doUpdateArticleComment', {
+			id : params.id,
+			commentId : commentId,
+			commentBody : commentBody,
+			ajaxMode : 'Y'
+		}, function(data){
+			console.log(data);
+			console.log(data.data1);
+			$('.body-column' + commentId).empty().html(data.data1);
+		}, 'json');
+	};
 
 	function ArticleDetail__doIncreaseHitCount() {
 		$.get('../article/doIncreaseHitCountRd', {
@@ -214,34 +237,32 @@
 			</thead>
 			<tbody>
 				<c:forEach var="comment" items="${comments}">
-					<tr class="comment__article relative">
-					<c:choose>
-					
-					<c:when test="${comment.id == comment.id}">
+			
+
+					<tr class="comment__list${comment.id }">
 						<td class="author-column">${comment.nickname }</td>
-						<td>${comment.body }</td>
+						<td class="body-column${comment.id }">${comment.body }</td>
 						<c:if test="${loginedMemberId == comment.memberId}">
-						<td class="edit-column"><a href="#">수정</a></td>
+						<td class="edit-column"><nav class="pointer" onclick='Comment__article_Edit(${comment.id })'>수정</nav></td>
 						<td class="delete-column"><a href="../comment/dodelete?id=${comment.id }">삭제</a></td>
 						</c:if>
-					</c:when>
-					
-				<c:when test="${comment.id != comment.id}">	
-					<from action="../comment/doEdit" method="POST" class="hidden">
+						</tr>
+
+					<tr class="edit__ing${comment.id } hidden">
+					<from id="commentUpdate${comment.id}" action="../comment/doUpdateArticleComment" method="POST">
 					<td class="author-column">${comment.nickname }</td>
-				<td> <input	class="input input-bordered input-primary input-sm w-full max-w-4xl" name="commenEdit" autocomplete="off"
+				<td> <input	class="input input-bordered input-primary input-sm w-full max-w-4xl" name="commentEdit${comment.id }" autocomplete="off"
 				type="text" value="${comment.body }" /></td>
-			<td><button class="h-8 rounded border-black border-solid">댓글 수정</button></td>
+			<td><button class="h-8 rounded border-black border-solid" onclick='Comment__article_DoEdit(${comment.id })'>댓글 수정</button></td>
 			</from>
-			</c:when>
-			</c:choose>
-					</tr>
+</tr>
+				
 				</c:forEach>
 			</tbody>
 		</table>
 		<form action="../comment/docomment" method="POST">
 			<input type="hidden" name="id" value="${article.id }"> <input
-				class="input input-bordered input-primary input-sm w-full max-w-4xl" name="commentInput" autocomplete="off"
+				class="input input-bordered input-primary input-sm w-full max-w-5xl" name="commentInput" autocomplete="off"
 				type="text" placeholder="댓글을 입력하세요..." />
 			<button class="h-8 rounded border-black border-solid">댓글 작성</button>
 		</form>
